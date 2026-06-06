@@ -1,8 +1,8 @@
 import { NavLink, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+
 
 function Navbar() {
-
-  useLocation();
 
   const user =
     JSON.parse(
@@ -15,6 +15,44 @@ function Navbar() {
 
     window.location.href = "/";
   };
+
+  useEffect(() => {
+
+    let timer: any;
+
+    const resetTimer = () => {
+
+      clearTimeout(timer);
+
+      timer = setTimeout(() => {
+
+        localStorage.removeItem("user");
+
+        alert("Session expired. Please login again.");
+
+        window.location.href = "/login";
+
+      }, 10 * 60 * 1000);
+
+    };
+
+    window.addEventListener("mousemove", resetTimer);
+    window.addEventListener("keypress", resetTimer);
+    window.addEventListener("click", resetTimer);
+
+    resetTimer();
+
+    return () => {
+
+      clearTimeout(timer);
+
+      window.removeEventListener("mousemove", resetTimer);
+      window.removeEventListener("keypress", resetTimer);
+      window.removeEventListener("click", resetTimer);
+    };
+
+  }, []);
+
 
   return (
     <nav className="navbar">

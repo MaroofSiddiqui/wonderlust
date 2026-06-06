@@ -10,16 +10,37 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Booking from "./pages/Booking";
 import Footer from "./components/Footer";
-import TourDetails from "./pages/TourDetails";
 import NotFound from "./pages/NotFound";
 import Success from "./pages/Success";
 import Dashboard from "./pages/Dashboard";
 import Admin from "./pages/Admin";
+import EditBooking from "./pages/EditBooking";
+import { useEffect } from "react";
+import TourDetails from "./pages/TourDetails";
 
 import "./styles/Navbar.css";
 import "./styles/Home.css";
 
 function App() {
+
+  useEffect(() => {
+
+    const timeout = setTimeout(() => {
+
+      localStorage.removeItem("user");
+
+      alert(
+        "Session Expired. Please login again."
+      );
+
+      window.location.href = "/login";
+
+    }, 15 * 60 * 1000);
+
+    return () => clearTimeout(timeout);
+
+  }, []);
+
   return (
     <BrowserRouter>
       <Navbar />
@@ -36,7 +57,9 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/success" element={<Success />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin" element={<Admin />}/>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/edit-booking/:id" element={<EditBooking />} />
+        <Route path="/tour-details/:id" element={<TourDetails />}/>
       </Routes>
       <Footer />
     </BrowserRouter>

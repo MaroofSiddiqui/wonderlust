@@ -40,7 +40,6 @@ function Booking() {
     };
 
     const handleSubmit = async () => {
-
         if (!user) {
             alert("Please login first");
             navigate("/login");
@@ -49,9 +48,6 @@ function Booking() {
 
         const emailRegex =
             /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        const nameRegex =
-            /^[A-Za-z ]+$/;
 
         const phoneRegex =
             /^[0-9]{10}$/;
@@ -67,9 +63,9 @@ function Booking() {
             return;
         }
 
-        if (!nameRegex.test(formData.fullName)) {
+        if (formData.fullName.trim().length < 3) {
             alert(
-                "Name should contain only letters and spaces"
+                "Name must be at least 3 characters"
             );
             return;
         }
@@ -110,7 +106,6 @@ function Booking() {
         }
 
         try {
-
             await axios.post(
                 "http://localhost:8080/api/bookings",
                 {
@@ -128,10 +123,8 @@ function Booking() {
             navigate("/success");
 
         } catch (error) {
-
             alert("Booking Failed!");
             console.log(error);
-
         }
     };
 
@@ -155,20 +148,22 @@ function Booking() {
                         "0px 4px 15px rgba(0,0,0,0.15)",
                 }}
             >
-                <h1 style={{ textAlign: "center" }}>
+                <h1
+                    style={{
+                        textAlign: "center",
+                        marginBottom: "25px",
+                    }}
+                >
                     Book Tour
                 </h1>
 
                 <input
                     type="text"
                     name="fullName"
+                    placeholder="Full Name"
                     value={formData.fullName}
-                    readOnly
-                    style={{
-                        ...inputStyle,
-                        backgroundColor: "#eee",
-                        cursor: "not-allowed",
-                    }}
+                    onChange={handleChange}
+                    style={inputStyle}
                 />
 
                 <input
@@ -243,6 +238,7 @@ const inputStyle = {
     width: "100%",
     padding: "12px",
     marginBottom: "15px",
+    boxSizing: "border-box" as const,
 };
 
 const buttonStyle = {

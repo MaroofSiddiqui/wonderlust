@@ -10,6 +10,7 @@ function Dashboard() {
         localStorage.getItem("user") || "null"
     );
 
+
     const [bookings, setBookings] =
         useState<any[]>([]);
 
@@ -80,6 +81,8 @@ function Dashboard() {
             );
         }
     };
+
+
 
     return (
         <div
@@ -153,6 +156,25 @@ function Dashboard() {
                                 </td>
 
                                 <td style={tdStyle}>
+
+                                    <button
+                                        onClick={() =>
+                                            navigate(
+                                                `/edit-booking/${booking.id}`
+                                            )
+                                        }
+                                        style={{
+                                            background: "orange",
+                                            color: "white",
+                                            border: "none",
+                                            padding: "8px 12px",
+                                            borderRadius: "5px",
+                                            cursor: "pointer",
+                                            marginRight: "10px",
+                                        }}
+                                    >
+                                        Edit
+                                    </button>
 
                                     <button
                                         onClick={() =>

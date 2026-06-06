@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
 
+  const navigate = useNavigate();
   const [emailError, setEmailError] = useState("");
 
   const [formData, setFormData] = useState({
@@ -70,11 +72,13 @@ function Register() {
           fullName: formData.fullName,
           email: formData.email,
           password: formData.password,
-          role : "USER"
+          role: "USER"
         }
       );
 
       alert("Registration Successful");
+
+      navigate("/");
 
       setFormData({
         fullName: "",
@@ -87,6 +91,17 @@ function Register() {
 
       alert("Registration Failed");
       console.log(error);
+
+    }
+  };
+
+  const handleKeyDown = (
+    e: React.KeyboardEvent
+  ) => {
+
+    if (e.key === "Enter") {
+
+      handleRegister();
 
     }
   };
@@ -158,6 +173,7 @@ function Register() {
           placeholder="Confirm Password"
           value={formData.confirmPassword}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           style={inputStyle}
         />
 

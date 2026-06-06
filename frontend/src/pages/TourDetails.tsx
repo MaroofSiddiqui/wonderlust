@@ -1,13 +1,47 @@
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 
 function TourDetails() {
+
     const { id } = useParams();
 
+    const navigate = useNavigate();
+
+    const [tour, setTour] = useState<any>(null);
+
+    useEffect(() => {
+
+        fetchTour();
+
+    }, []);
+
+    const fetchTour = async () => {
+
+        try {
+
+            const response =
+                await axios.get(
+                    `http://localhost:8080/api/tours/${id}`
+                );
+
+            setTour(response.data);
+
+        } catch (error) {
+
+            console.log(error);
+        }
+    };
+
+    if (!tour) {
+
+        return <h2>Loading...</h2>;
+    }
+
     return (
-        <section
+        <div
             style={{
-                padding: "60px",
+                padding: "50px",
                 minHeight: "100vh",
                 background: "#f5f5f5",
             }}
@@ -15,57 +49,70 @@ function TourDetails() {
             <div
                 style={{
                     maxWidth: "1000px",
-                    margin: "0 auto",
+                    margin: "auto",
                     background: "white",
                     borderRadius: "15px",
                     overflow: "hidden",
-                    boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+                    boxShadow:
+                        "0px 4px 15px rgba(0,0,0,0.15)",
                 }}
             >
                 <img
-                    src="https://images.unsplash.com/photo-1469474968028-56623f02e42e"
-                    alt="tour"
+                    src={tour.image}
+                    alt={tour.title}
                     style={{
                         width: "100%",
-                        height: "400px",
+                        height: "450px",
                         objectFit: "cover",
                     }}
                 />
 
-                <div style={{ padding: "30px" }}>
-                    <h1>{id}</h1>
+                <div
+                    style={{
+                        padding: "30px",
+                    }}
+                >
+                    <h1>{tour.title}</h1>
 
-                    <h2 style={{ color: "#00b4ff" }}>
-                        ₹12,999
+                    <h3>
+                        📍 {tour.location}
+                    </h3>
+
+                    <h2>
+                        ₹{tour.price}
                     </h2>
 
-                    <p>
-                        Duration: 5 Days / 4 Nights
+                    <h3>Description</h3>
+
+                    <p
+                        style={{
+                            marginTop: "20px",
+                            lineHeight: "1.8",
+                            fontSize: "18px",
+                        }}
+                    >
+                        {tour.description}
                     </p>
 
-                    <p>
-                        Enjoy a memorable trip with sightseeing,
-                        hotel stay, transportation, and guided tours.
-                    </p>
-
-                    <Link to="/booking">
-                        <button
-                            style={{
-                                background: "#00b4ff",
-                                color: "white",
-                                border: "none",
-                                padding: "12px 25px",
-                                borderRadius: "8px",
-                                cursor: "pointer",
-                                marginTop: "20px",
-                            }}
-                        >
-                            Book This Tour
-                        </button>
-                    </Link>
+                    <button
+                        onClick={() =>
+                            navigate("/booking")
+                        }
+                        style={{
+                            marginTop: "20px",
+                            padding: "12px 25px",
+                            background: "#00b4ff",
+                            border: "none",
+                            color: "white",
+                            borderRadius: "8px",
+                            cursor: "pointer",
+                        }}
+                    >
+                        Book Now
+                    </button>
                 </div>
             </div>
-        </section>
+        </div>
     );
 }
 

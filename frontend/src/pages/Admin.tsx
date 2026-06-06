@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 
 function Admin() {
   const navigate = useNavigate();
+  const loggedInUser = JSON.parse(
+    localStorage.getItem("user") || "null"
+  );
 
   const [users, setUsers] = useState<any[]>([]);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -14,6 +17,7 @@ function Admin() {
     location: "",
     image: "",
     price: "",
+    description: "",
   });
 
   useEffect(() => {
@@ -21,7 +25,13 @@ function Admin() {
       localStorage.getItem("user") || "null"
     );
 
-    if (!user || user.role !== "ADMIN") {
+    if (
+      !user ||
+      (
+        user.role !== "ADMIN" &&
+        user.role !== "MANAGER"
+      )
+    ) {
       alert("Access Denied");
       navigate("/");
       return;
@@ -31,6 +41,9 @@ function Admin() {
     fetchBookings();
     fetchTours();
   }, [navigate]);
+
+  const [editingId, setEditingId] =
+    useState<number | null>(null);
 
   const fetchUsers = async () => {
     try {
@@ -77,6 +90,7 @@ function Admin() {
           location: tourData.location,
           image: tourData.image,
           price: Number(tourData.price),
+          description: tourData.description
         }
       );
 
@@ -87,6 +101,8 @@ function Admin() {
         location: "",
         image: "",
         price: "",
+        description: "",
+
       });
 
       fetchTours();
@@ -109,6 +125,99 @@ function Admin() {
 
       fetchTours();
     } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editTour = (tour: any) => {
+
+    setTourData({
+      title: tour.title,
+      location: tour.location,
+      image: tour.image,
+      price: tour.price,
+      description: tour.description,
+    });
+
+    setEditingId(tour.id);
+  };
+
+  const updateTour = async () => {
+
+    try {
+
+      await axios.put(
+        `http://localhost:8080/api/tours/${editingId}`,
+        {
+          title: tourData.title,
+          location: tourData.location,
+          image: tourData.image,
+          price: Number(tourData.price),
+        }
+      );
+
+      alert("Tour Updated");
+
+      setEditingId(null);
+
+      setTourData({
+        title: "",
+        location: "",
+        image: "",
+        price: "",
+        description: "",
+      });
+
+      fetchTours();
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Update Failed");
+    }
+  };
+
+  const makeManager = async (
+    id: number
+  ) => {
+
+    try {
+
+      await axios.put(
+        `http://localhost:8080/api/users/make-manager/${id}`
+      );
+
+      alert(
+        "Manager Created Successfully"
+      );
+
+      fetchUsers();
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  };
+
+  const removeManager = async (
+    id: number
+  ) => {
+
+    try {
+
+      await axios.put(
+        `http://localhost:8080/api/users/remove-manager/${id}`
+      );
+
+      alert(
+        "Manager Removed Successfully"
+      );
+
+      fetchUsers();
+
+    } catch (error) {
+
       console.log(error);
     }
   };
@@ -205,11 +314,28 @@ function Admin() {
           style={inputStyle}
         />
 
+        <textarea
+          placeholder="Description"
+          value={tourData.description}
+          onChange={(e) =>
+            setTourData({
+              ...tourData,
+              description: e.target.value,
+            })
+          }
+        />
+
         <button
-          onClick={addTour}
+          onClick={
+            editingId
+              ? updateTour
+              : addTour
+          }
           style={buttonStyle}
         >
-          Add Tour
+          {editingId
+            ? "Update Tour"
+            : "Add Tour"}
         </button>
       </div>
 
@@ -234,21 +360,181 @@ function Admin() {
               <td style={tdStyle}>{tour.location}</td>
               <td style={tdStyle}>₹{tour.price}</td>
               <td style={tdStyle}>
+
                 <button
-                  onClick={() =>
-                    deleteTour(tour.id)
-                  }
+                  onClick={() => editTour(tour)}
                   style={{
-                    background: "red",
+                    background: "orange",
                     color: "white",
                     border: "none",
                     padding: "8px 12px",
                     borderRadius: "5px",
                     cursor: "pointer",
+                    marginRight: "10px",
                   }}
                 >
-                  Delete
+                  Edit
                 </button>
+
+                {loggedInUser.role === "ADMIN" && (
+
+                  <button
+                    onClick={() =>
+                      deleteTour(tour.id)
+                    }
+                    style={{
+                      background: "red",
+                      color: "white",
+                      border: "none",
+                      padding: "8px 12px",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Delete
+                  </button>
+
+                )}
+
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {loggedInUser.role === "ADMIN" && (
+        <>
+          <h2
+            style={{
+              marginTop: "40px",
+            }}
+          >
+            Users
+          </h2>
+
+          <table style={tableStyle}>
+            <thead>
+              <tr>
+                <th style={thStyle}>ID</th>
+                <th style={thStyle}>Name</th>
+                <th style={thStyle}>Email</th>
+                <th style={thStyle}>Role</th>
+                <th style={thStyle}>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td style={tdStyle}>
+                    {user.id}
+                  </td>
+
+                  <td style={tdStyle}>
+                    {user.fullName}
+                  </td>
+
+                  <td style={tdStyle}>
+                    {user.email}
+                  </td>
+
+                  <td style={tdStyle}>
+                    {user.role}
+                  </td>
+                  <td style={tdStyle}>
+
+                    {user.role === "USER" && (
+
+                      <button
+                        onClick={() =>
+                          makeManager(user.id)
+                        }
+                        style={{
+                          background: "green",
+                          color: "white",
+                          border: "none",
+                          padding: "6px 10px",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Make Manager
+                      </button>
+
+                    )}
+
+                    {user.role === "MANAGER" && (
+
+                      <button
+                        onClick={() =>
+                          removeManager(user.id)
+                        }
+                        style={{
+                          background: "orange",
+                          color: "white",
+                          border: "none",
+                          padding: "6px 10px",
+                          borderRadius: "5px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        Remove Manager
+                      </button>
+
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </>
+      )}
+
+      <h2
+        style={{
+          marginTop: "40px",
+        }}
+      >
+        Bookings
+      </h2>
+
+      <table style={tableStyle}>
+        <thead>
+          <tr>
+            <th style={thStyle}>ID</th>
+            <th style={thStyle}>Name</th>
+            <th style={thStyle}>Email</th>
+            <th style={thStyle}>Phone</th>
+            <th style={thStyle}>Travel Date</th>
+            <th style={thStyle}>Travelers</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {bookings.map((booking) => (
+            <tr key={booking.id}>
+              <td style={tdStyle}>
+                {booking.id}
+              </td>
+
+              <td style={tdStyle}>
+                {booking.fullName}
+              </td>
+
+              <td style={tdStyle}>
+                {booking.email}
+              </td>
+
+              <td style={tdStyle}>
+                {booking.phone}
+              </td>
+
+              <td style={tdStyle}>
+                {booking.travelDate}
+              </td>
+
+              <td style={tdStyle}>
+                {booking.travelers}
               </td>
             </tr>
           ))}

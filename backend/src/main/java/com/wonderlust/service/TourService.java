@@ -25,4 +25,21 @@ public class TourService {
     public void deleteTour(Long id) {
         repository.deleteById(id);
     }
+    
+    public Tour updateTour(Long id, Tour updatedTour) {
+
+        Tour tour = repository.findById(id)
+                .orElseThrow();
+
+        tour.setTitle(updatedTour.getTitle());
+        tour.setLocation(updatedTour.getLocation());
+        tour.setImage(updatedTour.getImage());
+        tour.setPrice(updatedTour.getPrice());
+
+        return repository.save(tour);
+    }
+    
+    public Tour getTourById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 }

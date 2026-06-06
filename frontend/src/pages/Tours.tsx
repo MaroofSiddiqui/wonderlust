@@ -28,6 +28,8 @@ function Tours() {
             .includes(search.toLowerCase())
     );
 
+
+
     return (
         <section
             style={{
@@ -77,6 +79,7 @@ function Tours() {
                     filteredTours.map((tour) => (
                         <TourCard
                             key={tour.id}
+                            id={tour.id}
                             image={tour.image}
                             title={tour.title}
                             duration={tour.location}

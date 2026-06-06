@@ -70,6 +70,17 @@ function Login() {
         }
     };
 
+    const handleKeyDown = (
+        e: React.KeyboardEvent
+    ) => {
+
+        if (e.key === "Enter") {
+
+            handleLogin();
+
+        }
+    };
+
     return (
         <div
             style={{
@@ -120,6 +131,7 @@ function Login() {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
+                    onKeyDown={handleKeyDown}
                     style={inputStyle}
                 />
 

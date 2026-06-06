@@ -8,3 +8,4 @@ dist/
 .settings/
 *.log
 .env
+/.metadata/

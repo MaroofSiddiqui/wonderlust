@@ -17,6 +17,8 @@ public class Tour {
 
     private double price;
 
+    private String description;
+    
     public Tour() {
     }
 
@@ -58,5 +60,13 @@ public class Tour {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

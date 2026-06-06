@@ -29,4 +29,22 @@ public class BookingService {
     public void deleteBooking(Long id) {
         bookingRepository.deleteById(id);
     }
+    
+    public Booking updateBooking(
+            Long id,
+            Booking updatedBooking) {
+
+        Booking booking =
+                bookingRepository.findById(id)
+                .orElseThrow();
+
+        booking.setTravelDate(
+                updatedBooking.getTravelDate());
+
+        booking.setTravelers(
+                updatedBooking.getTravelers());
+
+        return bookingRepository.save(
+                booking);
+    }
 }

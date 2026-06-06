@@ -1,5 +1,5 @@
 package com.wonderlust.controller;
-
+import com.wonderlust.repository.UserRepository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +16,9 @@ public class UserController {
 
     @Autowired
     private UserService service;
+    
+    @Autowired
+    private UserRepository repository;
 
     @PostMapping("/register")
     public User register(@RequestBody User user) {
@@ -34,5 +37,31 @@ public class UserController {
     @GetMapping
     public List<User> getAllUsers() {
         return service.getAllUsers();
+    }
+    
+    @PutMapping("/make-manager/{id}")
+    public User makeManager(
+            @PathVariable Long id) {
+
+        User user =
+            repository.findById(id)
+            .orElseThrow();
+
+        user.setRole("MANAGER");
+
+        return repository.save(user);
+    }
+    
+    @PutMapping("/remove-manager/{id}")
+    public User removeManager(
+            @PathVariable Long id) {
+
+        User user =
+            repository.findById(id)
+            .orElseThrow();
+
+        user.setRole("USER");
+
+        return repository.save(user);
     }
 }
