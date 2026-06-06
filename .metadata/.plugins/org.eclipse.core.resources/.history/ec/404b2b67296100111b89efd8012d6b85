@@ -1,0 +1,5 @@
+package com.wonderlust.entity;
+
+public class Booking {
+
+}

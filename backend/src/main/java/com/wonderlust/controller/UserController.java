@@ -1,0 +1,38 @@
+package com.wonderlust.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import com.wonderlust.dto.LoginRequest;
+import com.wonderlust.entity.User;
+import com.wonderlust.service.UserService;
+
+@RestController
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000")
+public class UserController {
+
+    @Autowired
+    private UserService service;
+
+    @PostMapping("/register")
+    public User register(@RequestBody User user) {
+        return service.register(user);
+    }
+
+    @PostMapping("/login")
+    public User login(
+            @RequestBody LoginRequest request) {
+
+        return service.login(
+                request.getEmail(),
+                request.getPassword());
+    }
+
+    @GetMapping
+    public List<User> getAllUsers() {
+        return service.getAllUsers();
+    }
+}
