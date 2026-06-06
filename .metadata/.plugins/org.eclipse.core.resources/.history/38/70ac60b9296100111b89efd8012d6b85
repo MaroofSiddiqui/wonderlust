@@ -1,5 +1,0 @@
-package com.wonderlust.repository;
-
-public interface BookingRepository {
-
-}
