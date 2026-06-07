@@ -1,121 +1,166 @@
-import { useState } from "react";
-
 function Contact() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleChange = (e: any) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.message
-    ) {
-      alert("Please fill all fields");
-      return;
-    }
-
-    if (!emailRegex.test(formData.email)) {
-      alert("Please enter a valid email");
-      return;
-    }
-
-    alert("Message Sent Successfully");
-  };
-
   return (
     <section
       style={{
         minHeight: "100vh",
-        background: "#f5f5f5",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
+        background: "#f8fafc",
+        padding: "80px 50px",
       }}
     >
       <div
         style={{
-          width: "500px",
-          background: "white",
-          padding: "40px",
-          borderRadius: "15px",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.15)",
+          display: "grid",
+          gridTemplateColumns: "1fr 1.2fr",
+          gap: "60px",
+          alignItems: "start",
         }}
       >
-        <h2
+        <div>
+          <p
+            style={{
+              color: "#0ea5e9",
+              fontWeight: "600",
+              letterSpacing: "2px",
+              marginBottom: "20px",
+            }}
+          >
+            CONTACT
+          </p>
+
+          <h1
+            style={{
+              fontSize: "4rem",
+              fontWeight: "800",
+              color: "#0f172a",
+              marginBottom: "20px",
+            }}
+          >
+            Let's plan something good.
+          </h1>
+
+          <p
+            style={{
+              color: "#64748b",
+              fontSize: "20px",
+              marginBottom: "40px",
+            }}
+          >
+            Custom trips, group inquiries, or just saying hi —
+            we read every message.
+          </p>
+
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "25px",
+              color: "#0f172a",
+              fontSize: "20px",
+            }}
+          >
+            <p>✉️ support@wonderlust.com</p>
+            <p>📞 +91 9999999999</p>
+            <p>📍 CDAC, Kharghar</p>
+          </div>
+        </div>
+
+        <div
           style={{
-            textAlign: "center",
-            marginBottom: "20px",
+            background: "#fff",
+            border: "1px solid #e2e8f0",
+            borderRadius: "24px",
+            padding: "35px",
           }}
         >
-          Contact Us
-        </h2>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "20px",
+              marginBottom: "20px",
+            }}
+          >
+            <div>
+              <label>Name</label>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Your Name"
-          value={formData.name}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+              <input
+                type="text"
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  borderRadius: "12px",
+                  border: "1px solid #d1d5db",
+                  marginTop: "8px",
+                }}
+              />
+            </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Your Email"
-          value={formData.email}
-          onChange={handleChange}
-          style={inputStyle}
-        />
+            <div>
+              <label>Email</label>
 
-        <textarea
-          name="message"
-          placeholder="Your Message"
-          rows={5}
-          value={formData.message}
-          onChange={handleChange}
-          style={{
-            width: "100%",
-            padding: "12px",
-            marginBottom: "20px",
-          }}
-        />
+              <input
+                type="email"
+                style={{
+                  width: "100%",
+                  padding: "14px",
+                  borderRadius: "12px",
+                  border: "1px solid #d1d5db",
+                  marginTop: "8px",
+                }}
+              />
+            </div>
+          </div>
 
-        <button
-          onClick={handleSubmit}
-          style={{
-            width: "100%",
-            padding: "12px",
-            background: "#00b4ff",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-          }}
-        >
-          Send Message
-        </button>
+          <div style={{ marginBottom: "20px" }}>
+            <label>Subject</label>
+
+            <input
+              type="text"
+              style={{
+                width: "100%",
+                padding: "14px",
+                borderRadius: "12px",
+                border: "1px solid #d1d5db",
+                marginTop: "8px",
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: "25px" }}>
+            <label>Message</label>
+
+            <textarea
+              rows={7}
+              style={{
+                width: "100%",
+                padding: "14px",
+                borderRadius: "12px",
+                border: "1px solid #d1d5db",
+                marginTop: "8px",
+                resize: "none",
+              }}
+            />
+          </div>
+
+          <button
+            style={{
+              width: "100%",
+              padding: "16px",
+              border: "none",
+              borderRadius: "12px",
+              background: "#ff4d5a",
+              color: "white",
+              fontSize: "18px",
+              fontWeight: "600",
+              cursor: "pointer",
+            }}
+          >
+            Send message
+          </button>
+        </div>
       </div>
     </section>
   );
 }
-
-const inputStyle = {
-  width: "100%",
-  padding: "12px",
-  marginBottom: "15px",
-};
 
 export default Contact;

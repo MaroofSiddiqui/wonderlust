@@ -93,8 +93,12 @@ function Dashboard() {
             }}
         >
             <h1>
-                Welcome, {user?.fullName}
+                Welcome Back, {user?.fullName}
             </h1>
+
+            <p>
+                Role: {user?.role}
+            </p>
 
             <h2
                 style={{

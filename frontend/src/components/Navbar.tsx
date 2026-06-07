@@ -1,19 +1,17 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
-
 
 function Navbar() {
 
-  const user =
-    JSON.parse(
-      localStorage.getItem("user") || "null"
-    );
+  const user = JSON.parse(
+    localStorage.getItem("user") || "null"
+  );
 
   const handleLogout = () => {
 
     localStorage.removeItem("user");
 
-    window.location.href = "/";
+    window.location.href = "/auth";
   };
 
   useEffect(() => {
@@ -28,17 +26,30 @@ function Navbar() {
 
         localStorage.removeItem("user");
 
-        alert("Session expired. Please login again.");
+        alert(
+          "Session expired. Please login again."
+        );
 
-        window.location.href = "/login";
+        window.location.href = "/auth";
 
       }, 10 * 60 * 1000);
 
     };
 
-    window.addEventListener("mousemove", resetTimer);
-    window.addEventListener("keypress", resetTimer);
-    window.addEventListener("click", resetTimer);
+    window.addEventListener(
+      "mousemove",
+      resetTimer
+    );
+
+    window.addEventListener(
+      "keypress",
+      resetTimer
+    );
+
+    window.addEventListener(
+      "click",
+      resetTimer
+    );
 
     resetTimer();
 
@@ -46,87 +57,187 @@ function Navbar() {
 
       clearTimeout(timer);
 
-      window.removeEventListener("mousemove", resetTimer);
-      window.removeEventListener("keypress", resetTimer);
-      window.removeEventListener("click", resetTimer);
+      window.removeEventListener(
+        "mousemove",
+        resetTimer
+      );
+
+      window.removeEventListener(
+        "keypress",
+        resetTimer
+      );
+
+      window.removeEventListener(
+        "click",
+        resetTimer
+      );
     };
 
   }, []);
 
-
   return (
-    <nav className="navbar">
+    <nav
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "16px 50px",
+        zIndex: 1000,
+        boxSizing: "border-box",
 
-      <div className="logo">
-        WonderLust
+        background: "rgba(255,255,255,0.95)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
+
+        boxShadow:
+          "0 2px 20px rgba(0,0,0,0.08)",
+      }}
+    >
+
+      <div>
+        <h2
+          style={{
+            margin: 0,
+            fontWeight: "700",
+            fontSize: "32px",
+            color: "#111827",
+          }}
+        >
+          ✈ WonderLust
+        </h2>
       </div>
 
-      <div className="nav-links">
+      <div
+        style={{
+          display: "flex",
+          gap: "40px",
+          alignItems: "center",
+        }}
+      >
 
-        <NavLink to="/">
+        <NavLink
+          to="/"
+          style={navLinkStyle}
+        >
           Home
         </NavLink>
 
-        <NavLink to="/tours">
+        <NavLink
+          to="/tours"
+          style={navLinkStyle}
+        >
           Tours
         </NavLink>
 
-        <NavLink to="/about">
+        <NavLink
+          to="/about"
+          style={navLinkStyle}
+        >
           About
         </NavLink>
 
-        <NavLink to="/contact">
+        <NavLink
+          to="/contact"
+          style={navLinkStyle}
+        >
           Contact
         </NavLink>
 
-        {user?.role === "ADMIN" && (
-          <NavLink to="/admin">
-            Admin
-          </NavLink>
-        )}
+        {(user?.role === "ADMIN" ||
+          user?.role === "MANAGER") && (
+            <NavLink
+              to="/admin"
+              style={navLinkStyle}
+            >
+              Admin
+            </NavLink>
+          )}
+
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "15px",
+        }}
+      >
 
         {user ? (
           <>
-
             <span
               style={{
-                color: "white",
-                marginRight: "15px",
-                fontWeight: "bold",
+                fontWeight: "600",
+                color: "#333",
               }}
             >
-              Welcome, {user.fullName}
+              {user.fullName}
             </span>
 
-            <NavLink to="/dashboard">
+            <NavLink
+              to="/dashboard"
+              style={{
+                textDecoration: "none",
+                color: "#333",
+                fontWeight: "600",
+                fontSize: "16px",
+              }}
+            >
               Dashboard
             </NavLink>
 
             <button
               onClick={handleLogout}
               style={{
-                background: "transparent",
-                border: "none",
+                background: "#ff5a5f",
                 color: "white",
+                border: "none",
+                padding: "10px 20px",
+                borderRadius: "12px",
                 cursor: "pointer",
-                fontSize: "16px",
+                fontWeight: "600",
               }}
             >
               Logout
             </button>
-
           </>
         ) : (
           <>
-
-            <NavLink to="/login">
-              Login
+            <NavLink
+              to="/auth"
+              style={{
+                textDecoration: "none",
+                color: "#111827",
+                fontWeight: "600",
+              }}
+            >
+              Sign In
             </NavLink>
 
-            <NavLink to="/register">
-              Register
+            <NavLink
+              to="/auth"
+              style={{
+                textDecoration: "none",
+              }}
+            >
+              <button
+                style={{
+                  background: "#ff5a5f",
+                  color: "white",
+                  border: "none",
+                  padding: "12px 22px",
+                  borderRadius: "12px",
+                  cursor: "pointer",
+                  fontWeight: "bold",
+                }}
+              >
+                Get Started
+              </button>
             </NavLink>
-
           </>
         )}
 
@@ -135,5 +246,12 @@ function Navbar() {
     </nav>
   );
 }
+
+const navLinkStyle = {
+  textDecoration: "none",
+  color: "#374151",
+  fontWeight: "600",
+  fontSize: "16px",
+};
 
 export default Navbar;

@@ -5,6 +5,7 @@ import TourCard from "../components/TourCard";
 function Tours() {
     const [search, setSearch] = useState("");
     const [tours, setTours] = useState<any[]>([]);
+    const [visibleTours, setVisibleTours] = useState(6);
 
     useEffect(() => {
         fetchTours();
@@ -28,68 +29,146 @@ function Tours() {
             .includes(search.toLowerCase())
     );
 
-
-
     return (
-        <section
-            style={{
-                padding: "80px 50px",
-                minHeight: "100vh",
-                background: "#f5f5f5",
-            }}
-        >
-            <h1
+        <>
+            <section
                 style={{
+                    padding: "100px 50px 80px",
                     textAlign: "center",
-                    marginBottom: "40px",
-                    fontSize: "3rem",
+                    background: "#f8fafc",
                 }}
             >
-                Explore Our Tours
-            </h1>
+                <h1
+                    style={{
+                        fontSize: "4rem",
+                        marginBottom: "20px",
+                        fontWeight: "800",
+                    }}
+                >
+                    Find Your Next Adventure
+                </h1>
 
-            <input
-                type="text"
-                placeholder="Search Tour..."
-                value={search}
-                onChange={(e) =>
-                    setSearch(e.target.value)
-                }
-                style={{
-                    width: "300px",
-                    padding: "12px",
-                    marginBottom: "30px",
-                    borderRadius: "8px",
-                    border: "1px solid #ccc",
-                }}
-            />
+                <p
+                    style={{
+                        fontSize: "20px",
+                        color: "#666",
+                        marginBottom: "40px",
+                    }}
+                >
+                    Explore breathtaking destinations and
+                    unforgettable experiences.
+                </p>
 
-            <div
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: "15px",
+                        flexWrap: "wrap",
+                    }}
+                >
+                    <input
+                        type="text"
+                        placeholder="Search destinations..."
+                        value={search}
+                        onChange={(e) =>
+                            setSearch(e.target.value)
+                        }
+                        style={{
+                            width: "350px",
+                            padding: "15px",
+                            borderRadius: "12px",
+                            border: "1px solid #ddd",
+                            fontSize: "16px",
+                        }}
+                    />
+
+                    <button style={filterBtn}>All</button>
+                    <button style={filterBtn}>Adventure</button>
+                    <button style={filterBtn}>Beach</button>
+                    <button style={filterBtn}>Cultural</button>
+                </div>
+            </section>
+
+            <section
                 style={{
-                    display: "grid",
-                    gridTemplateColumns:
-                        "repeat(3, 1fr)",
-                    gap: "30px",
+                    padding: "80px 50px",
+                    background: "#f5f5f5",
                 }}
             >
+                <div
+                    style={{
+                        maxWidth: "1400px",
+                        margin: "0 auto",
+                    }}
+                >
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns:
+                                "repeat(3, 1fr)",
+                            gap: "30px",
+                        }}
+                    >
+                        {filteredTours.length === 0 ? (
+                            <h3>No tours found</h3>
+                        ) : (
+                            filteredTours
+                                .slice(0, visibleTours)
+                                .map((tour) => (
+                                    <TourCard
+                                        key={tour.id}
+                                        id={tour.id}
+                                        image={tour.image}
+                                        title={tour.title}
+                                        duration={tour.location}
+                                        price={`₹${tour.price}`}
+                                    />
+                                ))
+                        )}
+                    </div>
 
-                {filteredTours.length === 0 ? (
-                    <h3>No tours found</h3>
-                ) : (
-                    filteredTours.map((tour) => (
-                        <TourCard
-                            key={tour.id}
-                            id={tour.id}
-                            image={tour.image}
-                            title={tour.title}
-                            duration={tour.location}
-                            price={`₹${tour.price}`}
-                        />
-                    ))
-                )}
-            </div>
-        </section>
+                    {visibleTours < filteredTours.length && (
+                        <div
+                            style={{
+                                textAlign: "center",
+                                marginTop: "50px",
+                            }}
+                        >
+                            <button
+                                onClick={() =>
+                                    setVisibleTours(
+                                        visibleTours + 6
+                                    )
+                                }
+                                style={{
+                                    background: "#ff5a5f",
+                                    color: "white",
+                                    border: "none",
+                                    padding: "14px 32px",
+                                    borderRadius: "12px",
+                                    cursor: "pointer",
+                                    fontSize: "16px",
+                                    fontWeight: "600",
+                                }}
+                            >
+                                View More Tours
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </section>
+        </>
     );
 }
+
+const filterBtn = {
+    padding: "12px 20px",
+    borderRadius: "12px",
+    border: "1px solid #ddd",
+    background: "white",
+    cursor: "pointer",
+    fontWeight: "600",
+};
 
 export default Tours;

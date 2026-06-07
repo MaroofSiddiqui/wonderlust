@@ -8,10 +8,13 @@ function Success() {
         alignItems: "center",
         flexDirection: "column",
       }}
+
     >
       <h1>🎉 Booking Successful</h1>
       <p>Your tour has been booked successfully.</p>
     </div>
+
+    
   );
 }
 

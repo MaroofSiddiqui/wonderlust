@@ -22,10 +22,12 @@ function TourCard({
     <div
       style={{
         background: "white",
-        borderRadius: "15px",
+        borderRadius: "24px",
         overflow: "hidden",
-        boxShadow: "0px 4px 15px rgba(0,0,0,0.15)",
+        boxShadow:
+          "0px 10px 30px rgba(0,0,0,0.08)",
         transition: "0.3s",
+        cursor: "pointer",
       }}
     >
       <Link to={`/tour-details/${id}`}>
@@ -34,7 +36,7 @@ function TourCard({
           alt={title}
           style={{
             width: "100%",
-            height: "250px",
+            height: "280px",
             objectFit: "cover",
           }}
         />
@@ -42,43 +44,74 @@ function TourCard({
 
       <div
         style={{
-          padding: "20px",
+          padding: "24px",
         }}
       >
-        <h3>{title}</h3>
+        <p
+          style={{
+            color: "#f59e0b",
+            fontSize: "14px",
+            marginBottom: "10px",
+          }}
+        >
+          ★★★★★ 4.9
+        </p>
+
+        <h3
+          style={{
+            fontSize: "24px",
+            marginBottom: "10px",
+            color: "#111827",
+          }}
+        >
+          {title}
+        </h3>
 
         <p
           style={{
-            color: "#666",
+            color: "#6b7280",
+            marginBottom: "20px",
           }}
         >
-          {duration}
+          📍 {duration}
         </p>
 
-        <h2
+        <div
           style={{
-            color: "#00b4ff",
+            display: "flex",
+            justifyContent:
+              "space-between",
+            alignItems: "center",
           }}
         >
-          {price}
-        </h2>
+          <h2
+            style={{
+              color: "#2563eb",
+              fontSize: "24px",
+            }}
+          >
+            {price}
+          </h2>
 
-        <button
-          onClick={() =>
-            navigate(`/tour-details/${id}`)
-          }
-          style={{
-            background: "#00b4ff",
-            color: "white",
-            border: "none",
-            padding: "10px 20px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            marginTop: "10px",
-          }}
-        >
-          View Details
-        </button>
+          <button
+            onClick={() =>
+              navigate(
+                `/tour-details/${id}`
+              )
+            }
+            style={{
+              background: "#2563eb",
+              color: "white",
+              border: "none",
+              padding: "12px 20px",
+              borderRadius: "12px",
+              cursor: "pointer",
+              fontWeight: "600",
+            }}
+          >
+            View Details →
+          </button>
+        </div>
       </div>
     </div>
   );
