@@ -6,6 +6,7 @@ function Tours() {
     const [search, setSearch] = useState("");
     const [tours, setTours] = useState<any[]>([]);
     const [visibleTours, setVisibleTours] = useState(6);
+    const [filter, setFilter] = useState("ALL");
 
     useEffect(() => {
         fetchTours();
@@ -23,11 +24,34 @@ function Tours() {
         }
     };
 
-    const filteredTours = tours.filter((tour) =>
-        tour.title
-            .toLowerCase()
-            .includes(search.toLowerCase())
-    );
+    const filteredTours = tours.filter((tour) => {
+
+        const matchesSearch =
+            tour.title
+                .toLowerCase()
+                .includes(search.toLowerCase());
+
+        if (filter === "BUDGET") {
+
+            return matchesSearch &&
+                tour.price < 20000;
+        }
+
+        if (filter === "PREMIUM") {
+
+            return matchesSearch &&
+                tour.price >= 20000 &&
+                tour.price <= 50000;
+        }
+
+        if (filter === "LUXURY") {
+
+            return matchesSearch &&
+                tour.price > 50000;
+        }
+
+        return matchesSearch;
+    });
 
     return (
         <>
@@ -83,10 +107,33 @@ function Tours() {
                         }}
                     />
 
-                    <button style={filterBtn}>All</button>
-                    <button style={filterBtn}>Adventure</button>
-                    <button style={filterBtn}>Beach</button>
-                    <button style={filterBtn}>Cultural</button>
+                    <button
+                        style={filterBtn}
+                        onClick={() => setFilter("ALL")}
+                    >
+                        All
+                    </button>
+
+                    <button
+                        style={filterBtn}
+                        onClick={() => setFilter("BUDGET")}
+                    >
+                        Budget
+                    </button>
+
+                    <button
+                        style={filterBtn}
+                        onClick={() => setFilter("PREMIUM")}
+                    >
+                        Premium
+                    </button>
+
+                    <button
+                        style={filterBtn}
+                        onClick={() => setFilter("LUXURY")}
+                    >
+                        Luxury
+                    </button>
                 </div>
             </section>
 

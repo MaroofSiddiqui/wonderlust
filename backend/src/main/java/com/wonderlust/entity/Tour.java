@@ -2,6 +2,10 @@ package com.wonderlust.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
+import jakarta.persistence.ElementCollection;
+
 @Entity
 public class Tour {
 
@@ -14,6 +18,9 @@ public class Tour {
     private String location;
 
     private String image;
+    
+    @ElementCollection
+    private List<String> images;
 
     private double price;
 
@@ -52,6 +59,14 @@ public class Tour {
 
     public void setImage(String image) {
         this.image = image;
+    }
+    
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 
     public double getPrice() {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import com.wonderlust.entity.Booking;
+import com.wonderlust.repository.BookingRepository;
 import com.wonderlust.service.BookingService;
 
 @RestController
@@ -15,6 +16,9 @@ public class BookingController {
 
     @Autowired
     private BookingService bookingService;
+    
+    @Autowired
+    private BookingRepository repository;
 
     @PostMapping
     public Booking createBooking(@RequestBody Booking booking) {
@@ -48,6 +52,20 @@ public class BookingController {
         return bookingService.updateBooking(
                 id,
                 booking);
+    }
+    
+    @PutMapping("/{id}/status")
+    public Booking updateStatus(
+            @PathVariable Long id,
+            @RequestParam String status) {
+
+        Booking booking =
+                repository.findById(id)
+                .orElseThrow();
+
+        booking.setStatus(status);
+
+        return repository.save(booking);
     }
     
     

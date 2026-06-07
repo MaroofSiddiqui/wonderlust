@@ -1,7 +1,66 @@
 import { useState } from "react";
+import axios from "axios";
 
 function Auth() {
     const [isLogin, setIsLogin] = useState(true);
+
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    const handleSubmit = async () => {
+        try {
+
+            if (isLogin) {
+
+                const response = await axios.post(
+                    "http://localhost:8080/api/users/login",
+                    {
+                        email,
+                        password
+                    }
+                );
+
+                localStorage.setItem(
+                    "user",
+                    JSON.stringify(response.data)
+                );
+
+                alert("Login Successful");
+
+                window.location.href = "/dashboard";
+
+            } else {
+
+                await axios.post(
+                    "http://localhost:8080/api/users/register",
+                    {
+                        fullName,
+                        email,
+                        password
+                    }
+                );
+
+                alert("Registration Successful");
+
+                setIsLogin(true);
+
+                setFullName("");
+                setEmail("");
+                setPassword("");
+            }
+
+        } catch (error) {
+
+            console.log(error);
+
+            alert(
+                isLogin
+                    ? "Invalid Email or Password"
+                    : "Registration Failed"
+            );
+        }
+    };
 
     return (
 
@@ -144,6 +203,10 @@ function Auth() {
 
                             <input
                                 type="text"
+                                value={fullName}
+                                onChange={(e) =>
+                                    setFullName(e.target.value)
+                                }
                                 style={{
                                     width: "100%",
                                     padding: "12px 14px",
@@ -169,6 +232,10 @@ function Auth() {
 
                         <input
                             type="email"
+                            value={email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
                             style={{
                                 width: "100%",
                                 padding: "12px 14px",
@@ -193,6 +260,10 @@ function Auth() {
 
                         <input
                             type="password"
+                            value={password}
+                            onChange={(e) =>
+                                setPassword(e.target.value)
+                            }
                             style={{
                                 width: "100%",
                                 padding: "12px 14px",
@@ -205,6 +276,7 @@ function Auth() {
                     </div>
 
                     <button
+                        onClick={handleSubmit}
                         style={{
                             width: "100%",
                             padding: "13px",

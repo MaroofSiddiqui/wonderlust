@@ -21,6 +21,8 @@ public class Booking {
     private String travelDate;
 
     private Integer travelers;
+    
+    private String status = "PENDING";
 
     public Booking() {
     }
@@ -71,5 +73,13 @@ public class Booking {
 
     public void setTravelers(Integer travelers) {
         this.travelers = travelers;
+    }
+    
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

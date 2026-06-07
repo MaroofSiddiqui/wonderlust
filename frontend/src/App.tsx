@@ -17,8 +17,6 @@ import EditBooking from "./pages/EditBooking";
 import TourDetails from "./pages/TourDetails";
 import Auth from "./pages/Auth";
 
-import "./styles/Navbar.css";
-import "./styles/Home.css";
 
 function Layout() {
   const location = useLocation();

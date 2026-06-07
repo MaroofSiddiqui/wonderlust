@@ -16,6 +16,7 @@ function Admin() {
     title: "",
     location: "",
     image: "",
+    images: "",
     price: "",
     description: "",
   });
@@ -89,6 +90,11 @@ function Admin() {
           title: tourData.title,
           location: tourData.location,
           image: tourData.image,
+
+          images: tourData.images
+            .split(",")
+            .map((img) => img.trim()),
+
           price: Number(tourData.price),
           description: tourData.description
         }
@@ -100,6 +106,7 @@ function Admin() {
         title: "",
         location: "",
         image: "",
+        images: "",
         price: "",
         description: "",
 
@@ -135,6 +142,11 @@ function Admin() {
       title: tour.title,
       location: tour.location,
       image: tour.image,
+
+      images: tour.images
+        ? tour.images.join(", ")
+        : "",
+
       price: tour.price,
       description: tour.description,
     });
@@ -152,7 +164,13 @@ function Admin() {
           title: tourData.title,
           location: tourData.location,
           image: tourData.image,
+
+          images: tourData.images
+            .split(",")
+            .map((img) => img.trim()),
+
           price: Number(tourData.price),
+          description: tourData.description,
         }
       );
 
@@ -164,6 +182,7 @@ function Admin() {
         title: "",
         location: "",
         image: "",
+        images: "",
         price: "",
         description: "",
       });
@@ -219,6 +238,28 @@ function Admin() {
     } catch (error) {
 
       console.log(error);
+    }
+  };
+
+  const updateStatus = async (
+    id: number,
+    status: string
+  ) => {
+
+    try {
+
+      await axios.put(
+        `http://localhost:8080/api/bookings/${id}/status?status=${status}`
+      );
+
+      fetchBookings();
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert("Failed to update status");
+
     }
   };
 
@@ -300,6 +341,23 @@ function Admin() {
             })
           }
           style={inputStyle}
+        />
+
+        <textarea
+          placeholder="Gallery Image URLs (comma separated)"
+          value={tourData.images}
+          onChange={(e) =>
+            setTourData({
+              ...tourData,
+              images: e.target.value,
+            })
+          }
+          style={{
+            width: "100%",
+            padding: "10px",
+            marginBottom: "10px",
+            minHeight: "100px",
+          }}
         />
 
         <input
@@ -507,6 +565,7 @@ function Admin() {
             <th style={thStyle}>Phone</th>
             <th style={thStyle}>Travel Date</th>
             <th style={thStyle}>Travelers</th>
+            <th style={thStyle}>Status</th>
           </tr>
         </thead>
 
@@ -535,6 +594,37 @@ function Admin() {
 
               <td style={tdStyle}>
                 {booking.travelers}
+              </td>
+              <td style={tdStyle}>
+
+                <select
+                  value={booking.status || "PENDING"}
+                  onChange={(e) =>
+                    updateStatus(
+                      booking.id,
+                      e.target.value
+                    )
+                  }
+                  style={{
+                    padding: "8px",
+                    borderRadius: "6px",
+                  }}
+                >
+
+                  <option value="PENDING">
+                    Pending
+                  </option>
+
+                  <option value="CONFIRMED">
+                    Confirmed
+                  </option>
+
+                  <option value="CANCELLED">
+                    Cancelled
+                  </option>
+
+                </select>
+
               </td>
             </tr>
           ))}

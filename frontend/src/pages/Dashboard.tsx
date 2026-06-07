@@ -14,6 +14,9 @@ function Dashboard() {
     const [bookings, setBookings] =
         useState<any[]>([]);
 
+    const [wishlistTours, setWishlistTours] =
+        useState<any[]>([]);
+
     useEffect(() => {
 
         if (!user) {
@@ -29,8 +32,36 @@ function Dashboard() {
         }
 
         fetchBookings();
+        fetchWishlist();
 
     }, [navigate]);
+
+    const fetchWishlist = async () => {
+
+        try {
+
+            const wishlistIds = JSON.parse(
+                localStorage.getItem("wishlist") || "[]"
+            );
+
+            const response = await axios.get(
+                "http://localhost:8080/api/tours"
+            );
+
+            const savedTours =
+                response.data.filter((tour: any) =>
+                    wishlistIds.includes(tour.id)
+                );
+
+            setWishlistTours(savedTours);
+
+        } catch (error) {
+
+            console.log(error);
+
+        }
+
+    };
 
     const fetchBookings = async () => {
 
@@ -82,7 +113,22 @@ function Dashboard() {
         }
     };
 
+    const totalBookings = bookings.length;
 
+    const totalTravelers = bookings.reduce(
+        (sum, booking) => sum + booking.travelers,
+        0
+    );
+
+    const upcomingTrips = bookings.filter(
+        (booking) =>
+            new Date(booking.travelDate) >= new Date()
+    ).length;
+
+    const nextTrip =
+        bookings.length > 0
+            ? bookings[0].travelDate
+            : "N/A";
 
     return (
         <div
@@ -99,6 +145,128 @@ function Dashboard() {
             <p>
                 Role: {user?.role}
             </p>
+
+            <div
+                style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gap: "20px",
+                    marginTop: "30px",
+                    marginBottom: "40px",
+                }}
+            >
+                <div style={cardStyle}>
+                    <h3>Total Bookings</h3>
+                    <h1>{totalBookings}</h1>
+                </div>
+
+                <div style={cardStyle}>
+                    <h3>Upcoming Trips</h3>
+                    <h1>{upcomingTrips}</h1>
+                </div>
+
+                <div style={cardStyle}>
+                    <h3>Total Travelers</h3>
+                    <h1>{totalTravelers}</h1>
+                </div>
+
+                <div style={cardStyle}>
+                    <h3>Next Trip</h3>
+                    <h2>{nextTrip}</h2>
+                </div>
+            </div>
+
+            <h2
+                style={{
+                    marginTop: "40px",
+                    marginBottom: "20px",
+                }}
+            >
+                ❤️ My Wishlist
+            </h2>
+
+            {wishlistTours.length === 0 ? (
+
+                <p>No saved tours.</p>
+
+            ) : (
+
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns:
+                            "repeat(3, 1fr)",
+                        gap: "20px",
+                        marginBottom: "40px",
+                    }}
+                >
+
+                    {wishlistTours.map((tour) => (
+
+                        <div
+                            key={tour.id}
+                            style={{
+                                background: "white",
+                                borderRadius: "15px",
+                                overflow: "hidden",
+                                boxShadow:
+                                    "0 4px 12px rgba(0,0,0,0.08)",
+                            }}
+                        >
+
+                            <img
+                                src={tour.image}
+                                alt={tour.title}
+                                style={{
+                                    width: "100%",
+                                    height: "220px",
+                                    objectFit: "cover",
+                                }}
+                            />
+
+                            <div
+                                style={{
+                                    padding: "15px",
+                                }}
+                            >
+
+                                <h3>{tour.title}</h3>
+
+                                <p>
+                                    📍 {tour.location}
+                                </p>
+
+                                <h3>
+                                    ₹{tour.price}
+                                </h3>
+
+                                <button
+                                    onClick={() =>
+                                        navigate(
+                                            `/tour-details/${tour.id}`
+                                        )
+                                    }
+                                    style={{
+                                        background: "#00b4ff",
+                                        color: "white",
+                                        border: "none",
+                                        padding: "10px 15px",
+                                        borderRadius: "8px",
+                                        cursor: "pointer",
+                                    }}
+                                >
+                                    View Tour
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    ))}
+
+                </div>
+
+            )}
 
             <h2
                 style={{
@@ -129,6 +297,7 @@ function Dashboard() {
                             <th style={thStyle}>Phone</th>
                             <th style={thStyle}>Travel Date</th>
                             <th style={thStyle}>Travelers</th>
+                            <th style={thStyle}>Status</th>
                             <th style={thStyle}>Action</th>
                         </tr>
                     </thead>
@@ -161,45 +330,78 @@ function Dashboard() {
 
                                 <td style={tdStyle}>
 
-                                    <button
-                                        onClick={() =>
-                                            navigate(
-                                                `/edit-booking/${booking.id}`
-                                            )
-                                        }
+                                    <span
                                         style={{
-                                            background: "orange",
+                                            padding: "6px 12px",
+                                            borderRadius: "20px",
                                             color: "white",
-                                            border: "none",
-                                            padding: "8px 12px",
-                                            borderRadius: "5px",
-                                            cursor: "pointer",
-                                            marginRight: "10px",
+                                            fontWeight: "bold",
+                                            background:
+                                                booking.status === "CONFIRMED"
+                                                    ? "green"
+                                                    : booking.status === "CANCELLED"
+                                                        ? "red"
+                                                        : "orange",
                                         }}
                                     >
-                                        Edit
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            deleteBooking(
-                                                booking.id
-                                            )
-                                        }
-                                        style={{
-                                            background: "red",
-                                            color: "white",
-                                            border: "none",
-                                            padding: "8px 12px",
-                                            borderRadius: "5px",
-                                            cursor: "pointer",
-                                        }}
-                                    >
-                                        Cancel
-                                    </button>
+                                        {booking.status}
+                                    </span>
 
                                 </td>
 
+                                <td style={tdStyle}>
+
+                                    {booking.status !== "CANCELLED" && (
+                                        <>
+                                            <button
+                                                onClick={() =>
+                                                    navigate(
+                                                        `/edit-booking/${booking.id}`
+                                                    )
+                                                }
+                                                style={{
+                                                    background: "orange",
+                                                    color: "white",
+                                                    border: "none",
+                                                    padding: "8px 12px",
+                                                    borderRadius: "5px",
+                                                    cursor: "pointer",
+                                                    marginRight: "10px",
+                                                }}
+                                            >
+                                                Edit
+                                            </button>
+
+                                            <button
+                                                onClick={() =>
+                                                    deleteBooking(booking.id)
+                                                }
+                                                style={{
+                                                    background: "red",
+                                                    color: "white",
+                                                    border: "none",
+                                                    padding: "8px 12px",
+                                                    borderRadius: "5px",
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                Cancel
+                                            </button>
+                                        </>
+                                    )}
+
+                                    {booking.status === "CANCELLED" && (
+                                        <span
+                                            style={{
+                                                color: "red",
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            Booking Cancelled
+                                        </span>
+                                    )}
+
+                                </td>
                             </tr>
 
                         ))}
@@ -207,9 +409,10 @@ function Dashboard() {
                     </tbody>
                 </table>
 
-            )}
+            )
+            }
 
-        </div>
+        </div >
     );
 }
 
@@ -223,6 +426,14 @@ const thStyle = {
 const tdStyle = {
     border: "1px solid #ddd",
     padding: "12px",
+};
+
+const cardStyle = {
+    background: "white",
+    padding: "25px",
+    borderRadius: "15px",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
+    textAlign: "center" as const,
 };
 
 export default Dashboard;
