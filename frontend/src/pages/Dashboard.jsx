@@ -12,10 +12,10 @@ function Dashboard() {
 
 
     const [bookings, setBookings] =
-        useState<any[]>([]);
+        useState([]);
 
     const [wishlistTours, setWishlistTours] =
-        useState<any[]>([]);
+        useState([]);
 
     useEffect(() => {
 
@@ -49,7 +49,7 @@ function Dashboard() {
             );
 
             const savedTours =
-                response.data.filter((tour: any) =>
+                response.data.filter((tour) =>
                     wishlistIds.includes(tour.id)
                 );
 
@@ -81,7 +81,7 @@ function Dashboard() {
     };
 
     const deleteBooking = async (
-        id: number
+        id
     ) => {
 
         const confirmDelete =
@@ -433,7 +433,7 @@ const cardStyle = {
     padding: "25px",
     borderRadius: "15px",
     boxShadow: "0 4px 15px rgba(0,0,0,0.08)",
-    textAlign: "center" as const,
+    textAlign: "center",
 };
 
 export default Dashboard;

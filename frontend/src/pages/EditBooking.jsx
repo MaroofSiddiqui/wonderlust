@@ -34,7 +34,7 @@ function EditBooking() {
 
     const selectedBooking =
       response.data.find(
-        (b: any) =>
+        (b) =>
           b.id === Number(id)
       );
 

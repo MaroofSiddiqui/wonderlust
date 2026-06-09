@@ -2,28 +2,22 @@ import { NavLink } from "react-router-dom";
 import { useEffect } from "react";
 
 function Navbar() {
-
   const user = JSON.parse(
     localStorage.getItem("user") || "null"
   );
 
   const handleLogout = () => {
-
     localStorage.removeItem("user");
-
     window.location.href = "/auth";
   };
 
   useEffect(() => {
-
-    let timer: any;
+    let timer;
 
     const resetTimer = () => {
-
       clearTimeout(timer);
 
       timer = setTimeout(() => {
-
         localStorage.removeItem("user");
 
         alert(
@@ -31,9 +25,7 @@ function Navbar() {
         );
 
         window.location.href = "/auth";
-
       }, 10 * 60 * 1000);
-
     };
 
     window.addEventListener(
@@ -54,7 +46,6 @@ function Navbar() {
     resetTimer();
 
     return () => {
-
       clearTimeout(timer);
 
       window.removeEventListener(
@@ -72,7 +63,6 @@ function Navbar() {
         resetTimer
       );
     };
-
   }, []);
 
   return (
@@ -88,16 +78,13 @@ function Navbar() {
         padding: "16px 50px",
         zIndex: 1000,
         boxSizing: "border-box",
-
         background: "rgba(255,255,255,0.95)",
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
-
         boxShadow:
           "0 2px 20px rgba(0,0,0,0.08)",
       }}
     >
-
       <div>
         <h2
           style={{
@@ -118,7 +105,6 @@ function Navbar() {
           alignItems: "center",
         }}
       >
-
         <NavLink
           to="/"
           style={navLinkStyle}
@@ -149,14 +135,13 @@ function Navbar() {
 
         {(user?.role === "ADMIN" ||
           user?.role === "MANAGER") && (
-            <NavLink
-              to="/admin"
-              style={navLinkStyle}
-            >
-              Admin
-            </NavLink>
-          )}
-
+          <NavLink
+            to="/admin"
+            style={navLinkStyle}
+          >
+            Admin
+          </NavLink>
+        )}
       </div>
 
       <div
@@ -166,7 +151,6 @@ function Navbar() {
           gap: "15px",
         }}
       >
-
         {user ? (
           <>
             <span
@@ -240,9 +224,7 @@ function Navbar() {
             </NavLink>
           </>
         )}
-
       </div>
-
     </nav>
   );
 }

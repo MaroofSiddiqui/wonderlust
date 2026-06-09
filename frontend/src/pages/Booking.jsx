@@ -1,9 +1,15 @@
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Booking() {
     const navigate = useNavigate();
+
+    const location = useLocation();
+
+    const { tourName, amount } =
+        location.state || {};
 
     const user = JSON.parse(
         localStorage.getItem("user") || "null"
@@ -17,9 +23,14 @@ function Booking() {
         phone: "",
         travelDate: "",
         travelers: "",
+        tourName: tourName || "",
+        amount: amount || 0,
+        paymentMethod: "PHONEPE",
+        paymentStatus: "PENDING",
+        transactionId: "",
     });
 
-    const handleChange = (e: any) => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
 
         setFormData({
@@ -39,7 +50,33 @@ function Booking() {
         }
     };
 
-    const handleSubmit = async () => {
+    const handlePayment = async () => {
+
+        const transactionId =
+            "TXN" +
+            Date.now();
+
+        alert(
+            "PhonePe Payment Successful\nTransaction ID: " +
+            transactionId
+        );
+
+        setFormData(prev => ({
+            ...prev,
+            paymentStatus: "PAID",
+            transactionId: transactionId,
+        }));
+
+        setTimeout(() => {
+            handleSubmit(
+                transactionId
+            );
+        }, 500);
+    };
+
+    const handleSubmit = async (
+        transactionId
+    ) => {
         if (!user) {
             alert("Please login first");
             navigate("/login");
@@ -116,6 +153,15 @@ function Booking() {
                     travelers: Number(
                         formData.travelers
                     ),
+                    tourName: formData.tourName,
+                    amount:
+                        formData.amount *
+                        Number(formData.travelers),
+
+                    paymentMethod: "ONLINE",
+                    paymentStatus: "PAID",
+                    transactionId:
+                        transactionId
                 }
             );
 
@@ -191,6 +237,21 @@ function Booking() {
                     </p>
                 )}
 
+                <div
+                    style={{
+                        background: "#f5f5f5",
+                        padding: "15px",
+                        borderRadius: "10px",
+                        marginBottom: "15px",
+                    }}
+                >
+                    <h3>{formData.tourName}</h3>
+
+                    <p>
+                        Package Price: ₹{formData.amount}
+                    </p>
+                </div>
+
                 <input
                     type="text"
                     name="phone"
@@ -223,11 +284,46 @@ function Booking() {
                     style={inputStyle}
                 />
 
+                <div
+                    style={{
+                        background: "#f5f5f5",
+                        padding: "15px",
+                        marginBottom: "15px",
+                        borderRadius: "8px",
+                    }}
+                >
+                    <h3>{formData.tourName}</h3>
+                    <p>
+                        Price: ₹{formData.amount * Number(formData.travelers || 1)}
+                    </p>
+                </div>
+
+                <div
+                    style={{
+                        background: "#5f259f",
+                        color: "white",
+                        padding: "20px",
+                        borderRadius: "12px",
+                        marginBottom: "20px",
+                    }}
+                >
+                    <h3>Payment Summary</h3>
+
+                    <p>
+                        Package:
+                        {formData.tourName}
+                    </p>
+
+                    <p>
+                        Amount: ₹{formData.amount * Number(formData.travelers || 1)}
+                    </p>
+                </div>
+
                 <button
                     style={buttonStyle}
-                    onClick={handleSubmit}
+                    onClick={handlePayment}
                 >
-                    Confirm Booking
+                    Pay ₹{formData.amount * Number(formData.travelers || 1)}
                 </button>
             </div>
         </div>
@@ -238,7 +334,7 @@ const inputStyle = {
     width: "100%",
     padding: "12px",
     marginBottom: "15px",
-    boxSizing: "border-box" as const,
+    boxSizing: "border-box",
 };
 
 const buttonStyle = {

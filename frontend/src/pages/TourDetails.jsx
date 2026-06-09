@@ -8,12 +8,12 @@ function TourDetails() {
 
     const navigate = useNavigate();
 
-    const [tour, setTour] = useState<any>(null);
+    const [tour, setTour] = useState(null);
 
     const [selectedImage, setSelectedImage] = useState("");
 
     const [relatedTours, setRelatedTours] =
-        useState<any[]>([]);
+        useState([]);
 
     useEffect(() => {
 
@@ -120,7 +120,7 @@ function TourDetails() {
                     }}
                 >
                     {tour.images?.map(
-                        (image: string, index: number) => (
+                        (image, index) => (
 
                             <img
                                 key={index}
@@ -277,7 +277,12 @@ function TourDetails() {
 
                             <button
                                 onClick={() =>
-                                    navigate("/booking")
+                                    navigate("/booking", {
+                                        state: {
+                                            tourName: tour.title,
+                                            amount: tour.price,
+                                        },
+                                    })
                                 }
                                 style={{
                                     width: "100%",
@@ -297,6 +302,7 @@ function TourDetails() {
                     </div>
                 </div>
             </div>
+
             <div
                 style={{
                     marginTop: "60px",

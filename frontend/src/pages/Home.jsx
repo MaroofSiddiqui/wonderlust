@@ -22,6 +22,7 @@ function Home() {
       console.log(error);
     }
   };
+
   return (
     <>
       <section
@@ -251,7 +252,7 @@ function Home() {
             gap: "30px",
           }}
         >
-          {tours.slice(0, 4).map((tour: any) => (
+          {tours.slice(0, 4).map((tour) => (
             <TourCard
               key={tour.id}
               id={tour.id}

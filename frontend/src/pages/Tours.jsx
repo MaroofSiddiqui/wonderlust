@@ -4,7 +4,7 @@ import TourCard from "../components/TourCard";
 
 function Tours() {
     const [search, setSearch] = useState("");
-    const [tours, setTours] = useState<any[]>([]);
+    const [tours, setTours] = useState([]);
     const [visibleTours, setVisibleTours] = useState(6);
     const [filter, setFilter] = useState("ALL");
 

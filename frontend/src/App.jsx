@@ -16,6 +16,7 @@ import Admin from "./pages/Admin";
 import EditBooking from "./pages/EditBooking";
 import TourDetails from "./pages/TourDetails";
 import Auth from "./pages/Auth";
+import ScrollToTop from "./components/ScrollToTop";
 
 
 function Layout() {
@@ -26,6 +27,7 @@ function Layout() {
   return (
     <>
       {!isAuthPage && <Navbar />}
+      <ScrollToTop />
 
       <Routes>
         <Route path="/" element={<Home />} />

@@ -1,21 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-type TourCardProps = {
-  id: number;
-  image: string;
-  title: string;
-  duration: string;
-  price: string;
-};
-
 function TourCard({
   id,
   image,
   title,
   duration,
   price,
-}: TourCardProps) {
+}) {
 
   const navigate = useNavigate();
 
@@ -45,7 +37,7 @@ function TourCard({
     if (wishlist.includes(id)) {
 
       wishlist = wishlist.filter(
-        (item: number) => item !== id
+        (item) => item !== id
       );
 
       setSaved(false);

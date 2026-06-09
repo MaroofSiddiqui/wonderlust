@@ -13,9 +13,20 @@ public class BookingService {
 
     @Autowired
     private BookingRepository bookingRepository;
+    
+    @Autowired
+    private EmailService emailService;
 
     public Booking saveBooking(Booking booking) {
-        return bookingRepository.save(booking);
+
+        Booking savedBooking =
+                bookingRepository.save(booking);
+
+        emailService.sendBookingConfirmation(
+                savedBooking
+        );
+
+        return savedBooking;
     }
 
     public List<Booking> getAllBookings() {

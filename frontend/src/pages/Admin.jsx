@@ -8,9 +8,9 @@ function Admin() {
     localStorage.getItem("user") || "null"
   );
 
-  const [users, setUsers] = useState<any[]>([]);
-  const [bookings, setBookings] = useState<any[]>([]);
-  const [tours, setTours] = useState<any[]>([]);
+  const [users, setUsers] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [tours, setTours] = useState([]);
 
   const [tourData, setTourData] = useState({
     title: "",
@@ -44,7 +44,7 @@ function Admin() {
   }, [navigate]);
 
   const [editingId, setEditingId] =
-    useState<number | null>(null);
+    useState(null);
 
   const fetchUsers = async () => {
     try {
@@ -119,7 +119,7 @@ function Admin() {
     }
   };
 
-  const deleteTour = async (id: number) => {
+  const deleteTour = async (id) => {
     if (!window.confirm("Delete this tour?"))
       return;
 
@@ -136,7 +136,7 @@ function Admin() {
     }
   };
 
-  const editTour = (tour: any) => {
+  const editTour = (tour) => {
 
     setTourData({
       title: tour.title,
@@ -198,7 +198,7 @@ function Admin() {
   };
 
   const makeManager = async (
-    id: number
+    id
   ) => {
 
     try {
@@ -220,7 +220,7 @@ function Admin() {
   };
 
   const removeManager = async (
-    id: number
+    id
   ) => {
 
     try {
@@ -242,8 +242,8 @@ function Admin() {
   };
 
   const updateStatus = async (
-    id: number,
-    status: string
+    id,
+    status
   ) => {
 
     try {
@@ -565,6 +565,8 @@ function Admin() {
             <th style={thStyle}>Phone</th>
             <th style={thStyle}>Travel Date</th>
             <th style={thStyle}>Travelers</th>
+            <th style={thStyle}>Payment</th>
+            <th style={thStyle}>Transaction</th>
             <th style={thStyle}>Status</th>
           </tr>
         </thead>
@@ -595,8 +597,9 @@ function Admin() {
               <td style={tdStyle}>
                 {booking.travelers}
               </td>
+              <td>{booking.paymentStatus}</td>
+              <td>{booking.transactionId}</td>
               <td style={tdStyle}>
-
                 <select
                   value={booking.status || "PENDING"}
                   onChange={(e) =>
@@ -661,7 +664,7 @@ const buttonStyle = {
 const tableStyle = {
   width: "100%",
   background: "white",
-  borderCollapse: "collapse" as const,
+  borderCollapse: "collapse",
 };
 
 const thStyle = {

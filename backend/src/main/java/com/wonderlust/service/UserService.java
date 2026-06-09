@@ -7,14 +7,25 @@ import org.springframework.stereotype.Service;
 
 import com.wonderlust.entity.User;
 import com.wonderlust.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UserService {
+	
+	@Autowired
+	private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserRepository repository;
 
     public User register(User user) {
+    	user.setPassword(
+    		    passwordEncoder.encode(
+    		        user.getPassword()
+    		    )
+    		);
+
+    		repository.save(user);
         return repository.save(user);
     }
 
@@ -27,10 +38,10 @@ public class UserService {
         User user =
                 repository.findByEmail(email);
 
-        if (
-            user != null &&
-            user.getPassword().equals(password)
-        ) {
+        if( user != null && (passwordEncoder.matches(
+                password,
+                user.getPassword()
+        ))) {
             return user;
         }
 
