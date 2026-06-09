@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -25,10 +25,9 @@ function TourDetails() {
 
         try {
 
-            const response =
-                await axios.get(
-                    "http://localhost:8080/api/tours"
-                );
+            const response = await API.get(
+                "/api/tours"
+            );
 
             setRelatedTours(response.data);
 
@@ -59,10 +58,9 @@ function TourDetails() {
 
         try {
 
-            const response =
-                await axios.get(
-                    `http://localhost:8080/api/tours/${id}`
-                );
+            const response = await API.get(
+                `/api/tours/${id}`
+            );
 
             setTour(response.data);
 

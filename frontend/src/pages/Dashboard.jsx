@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -44,8 +44,8 @@ function Dashboard() {
                 localStorage.getItem("wishlist") || "[]"
             );
 
-            const response = await axios.get(
-                "http://localhost:8080/api/tours"
+            const response = await API.get(
+                "/api/tours"
             );
 
             const savedTours =
@@ -68,8 +68,8 @@ function Dashboard() {
         try {
 
             const response =
-                await axios.get(
-                    `http://localhost:8080/api/bookings/email/${user.email}`
+                await API.get(
+                    `/api/bookings/email/${user.email}`
                 );
 
             setBookings(response.data);
@@ -93,8 +93,8 @@ function Dashboard() {
 
         try {
 
-            await axios.delete(
-                `http://localhost:8080/api/bookings/${id}`
+            await API.delete(
+                `/api/bookings/${id}`
             );
 
             alert(

@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 
 function Booking() {
     const navigate = useNavigate();
@@ -143,8 +143,8 @@ function Booking() {
         }
 
         try {
-            await axios.post(
-                "http://localhost:8080/api/bookings",
+            await API.post(
+                "/api/bookings",
                 {
                     fullName: formData.fullName,
                     email: formData.email,

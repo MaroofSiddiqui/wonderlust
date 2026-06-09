@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 import { useEffect, useState } from "react";
 import {
   useNavigate,
@@ -23,29 +23,37 @@ function EditBooking() {
 
   const fetchBooking = async () => {
 
-    const user = JSON.parse(
-      localStorage.getItem("user") || "null"
-    );
+    try {
 
-    const response =
-      await axios.get(
-        `http://localhost:8080/api/bookings/email/${user.email}`
+      const user = JSON.parse(
+        localStorage.getItem("user") || "null"
       );
 
-    const selectedBooking =
-      response.data.find(
-        (b) =>
-          b.id === Number(id)
-      );
+      const response =
+        await API.get(
+          `/api/bookings/email/${user.email}`
+        );
 
-    if (selectedBooking) {
+      const selectedBooking =
+        response.data.find(
+          (b) =>
+            b.id === Number(id)
+        );
 
-      setBooking({
-        travelDate:
-          selectedBooking.travelDate,
-        travelers:
-          selectedBooking.travelers,
-      });
+      if (selectedBooking) {
+
+        setBooking({
+          travelDate:
+            selectedBooking.travelDate,
+          travelers:
+            selectedBooking.travelers,
+        });
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
     }
   };
 
@@ -53,8 +61,8 @@ function EditBooking() {
 
     try {
 
-      await axios.put(
-        `http://localhost:8080/api/bookings/${id}`,
+      await API.put(
+        `/api/bookings/${id}`,
         booking
       );
 
@@ -100,6 +108,7 @@ function EditBooking() {
       <input
         type="number"
         value={booking.travelers}
+        min="1"
         onChange={(e) =>
           setBooking({
             ...booking,

@@ -1,5 +1,6 @@
 package com.wonderlust.controller;
 import com.wonderlust.repository.UserRepository;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.wonderlust.dto.LoginRequest;
 import com.wonderlust.entity.User;
 import com.wonderlust.service.UserService;
+import com.wonderlust.config.JwtUtil;
+import com.wonderlust.dto.LoginResponse;
 
 @RestController
 @RequestMapping("/api/users")
@@ -18,6 +21,9 @@ public class UserController {
     private UserService service;
     
     @Autowired
+    private JwtUtil jwtUtil;
+    
+    @Autowired
     private UserRepository repository;
 
     @PostMapping("/register")
@@ -26,12 +32,24 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User login(
+    public LoginResponse login(
             @RequestBody LoginRequest request) {
 
-        return service.login(
-                request.getEmail(),
-                request.getPassword());
+        User user =
+                service.login(
+                        request.getEmail(),
+                        request.getPassword()
+                );
+
+        String token =
+                jwtUtil.generateToken(
+                        user.getEmail()
+                );
+
+        return new LoginResponse(
+                token,
+                user
+        );
     }
 
     @GetMapping

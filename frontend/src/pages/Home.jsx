@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 import { useEffect, useState } from "react";
 import TourCard from "../components/TourCard";
 import { Link } from "react-router-dom";
@@ -13,13 +13,17 @@ function Home() {
 
   const fetchTours = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/tours"
+
+      const response = await API.get(
+        "/api/tours"
       );
 
       setTours(response.data);
+
     } catch (error) {
+
       console.log(error);
+
     }
   };
 

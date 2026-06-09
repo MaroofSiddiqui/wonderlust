@@ -1,4 +1,4 @@
-import axios from "axios";
+import API from "../api";
 import { useEffect, useState } from "react";
 import TourCard from "../components/TourCard";
 
@@ -14,8 +14,8 @@ function Tours() {
 
     const fetchTours = async () => {
         try {
-            const response = await axios.get(
-                "http://localhost:8080/api/tours"
+            const response = await API.get(
+                "/api/tours"
             );
 
             setTours(response.data);

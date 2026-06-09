@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api";
 
 function Auth() {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,8 +13,8 @@ function Auth() {
 
             if (isLogin) {
 
-                const response = await axios.post(
-                    "http://localhost:8080/api/users/login",
+                const response = await API.post(
+                    "/api/users/login",
                     {
                         email,
                         password
@@ -22,8 +22,13 @@ function Auth() {
                 );
 
                 localStorage.setItem(
+                    "token",
+                    response.data.token
+                );
+
+                localStorage.setItem(
                     "user",
-                    JSON.stringify(response.data)
+                    JSON.stringify(response.data.user)
                 );
 
                 alert("Login Successful");
@@ -32,8 +37,8 @@ function Auth() {
 
             } else {
 
-                await axios.post(
-                    "http://localhost:8080/api/users/register",
+                await API.post(
+                    "/api/users/register",
                     {
                         fullName,
                         email,

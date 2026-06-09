@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import { useEffect, useState } from "react";
 
 function Admin() {
@@ -48,10 +48,9 @@ function Admin() {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/users"
+      const response = await API.get(
+        "/api/users"
       );
-
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -60,8 +59,8 @@ function Admin() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/bookings"
+      const response = await API.get(
+        "/api/bookings"
       );
 
       setBookings(response.data);
@@ -72,8 +71,8 @@ function Admin() {
 
   const fetchTours = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/api/tours"
+      const response = await API.get(
+        "/api/tours"
       );
 
       setTours(response.data);
@@ -84,8 +83,8 @@ function Admin() {
 
   const addTour = async () => {
     try {
-      await axios.post(
-        "http://localhost:8080/api/tours",
+      await API.post(
+        "/api/tours",
         {
           title: tourData.title,
           location: tourData.location,
@@ -124,8 +123,8 @@ function Admin() {
       return;
 
     try {
-      await axios.delete(
-        `http://localhost:8080/api/tours/${id}`
+      await API.delete(
+        `/api/tours/${id}`
       );
 
       alert("Tour Deleted");
@@ -158,17 +157,15 @@ function Admin() {
 
     try {
 
-      await axios.put(
-        `http://localhost:8080/api/tours/${editingId}`,
+      await API.put(
+        `/api/tours/${editingId}`,
         {
           title: tourData.title,
           location: tourData.location,
           image: tourData.image,
-
           images: tourData.images
             .split(",")
             .map((img) => img.trim()),
-
           price: Number(tourData.price),
           description: tourData.description,
         }
@@ -203,8 +200,8 @@ function Admin() {
 
     try {
 
-      await axios.put(
-        `http://localhost:8080/api/users/make-manager/${id}`
+      await API.put(
+        `/api/users/make-manager/${id}`
       );
 
       alert(
@@ -225,8 +222,8 @@ function Admin() {
 
     try {
 
-      await axios.put(
-        `http://localhost:8080/api/users/remove-manager/${id}`
+      await API.put(
+        `/api/users/remove-manager/${id}`
       );
 
       alert(
@@ -248,8 +245,8 @@ function Admin() {
 
     try {
 
-      await axios.put(
-        `http://localhost:8080/api/bookings/${id}/status?status=${status}`
+      await API.put(
+        `/api/bookings/${id}/status?status=${status}`
       );
 
       fetchBookings();
